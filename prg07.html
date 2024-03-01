@@ -1,0 +1,130 @@
+<hmtl>
+    <head>
+        <title>PROGRAM 7</title>
+        <script src="angular.js"></script>
+    </head>
+    <body ng-app="myApp">
+        <h2>CRUD application to manage users</h2>
+
+        <div ng-controller="myCntrl">
+            Enter your name:<input type="text" id="hesaru" ng-model="myName"/> &emsp;
+            Enter your email:<input type="email" id="mailid" ng-model="myEmailid"/> &emsp;&emsp;
+            <input type="button" value="Create" ng-click="create_user()"/><br><br>
+
+            <ul>
+                <li ng-repeat="user in users">
+                    <span ng-show="!user.editing">{{user.name}}</span>
+                    <input ng-show="user.editing" id="new_hesaru" ng-model="user.name"/> &emsp;
+
+                    <span ng-show="!user.editing">{{user.email}}</span>
+                    <input type="email" ng-show="user.editing" id="new_mailid" ng-model="user.email"/> &emsp;
+
+                    <input type="button" value="Read" ng-click="view_user_details(user)"/>&emsp;
+                    <input type="button" value="Update" ng-click="update_user_details(user)"/>&emsp;
+                    <input type="button" value="Delete" ng-click="remove_user(user)"/>&emsp;
+                </li>
+            </ul>
+        </div>
+    </body>
+</hmtl>
+
+<script>
+    var a = angular.module("myApp",[]);
+    a.controller("myCntrl",function($scope){
+        $scope.users = [];
+
+        
+        // Function to add a user
+
+        $scope.create_user=function()
+        {
+            if($scope.myName==null)
+            {
+                alert("Please enter your name");
+                document.getElementById("hesaru").focus();
+                return false;
+            }
+
+            else if($scope.myEmailid==null)
+            {
+                alert("Please enter your email");
+                document.getElementById("mailid").focus();
+                return false;
+            }
+            else
+            {
+                // Add a user
+
+                var userdata = { "name": $scope.myName, "email" : $scope.myEmailid,'editing':false };
+
+                if(userdata.name == "")
+                {
+                    alert("Please enter your name");
+                    document.getElementById("hesaru").focus();
+                    return false; 
+                }
+
+                else if(userdata.email == "")
+                {
+                    alert("Please enter your email");
+                    document.getElementById("mailid").focus();
+                    return false;
+                }
+
+                else
+                {
+                    $scope.users.push(userdata);
+
+                    // If you want you can clear the i/ps after creating a user
+                    $scope.myName=""
+                    $scope.myEmailid=""
+                }
+            }
+        }
+        
+        // Function to view the details of a particular user
+
+        $scope.view_user_details=function(userdets)
+        {
+            userdets.editing=true;
+        }
+
+        // Function to edit/change the details of a particular user
+
+        $scope.update_user_details=function(userdets)
+        {
+            if(userdets.name=="")
+            {
+                alert("Please enter your name");
+                document.getElementById("new_hesaru").focus();
+                return false; 
+            }
+
+            else if(userdets.email=="")
+            {
+                alert("Please enter your email");
+                document.getElementById("new_mailid").focus();
+                return false;
+            }
+            
+            else
+            userdets.editing=false;   
+        }
+
+        // Function to delete/remove a particular user
+        $scope.remove_user=function(userdets)
+        {
+            var doublecheck = confirm("Are you sure you want to remove this user "+userdets.name+" ?");
+            if(doublecheck == true)
+            {
+                var idx = $scope.users.indexOf(userdets);
+                $scope.users.splice(idx,1);
+            }
+
+            else
+            {
+                alert("You chose not to remove this user");
+            }
+        }
+    });
+</script>
